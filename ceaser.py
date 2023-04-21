@@ -68,12 +68,15 @@ def enter_message():
         else:
             break
 
-def main():
-    """this is the main function of the program"""
+def welcome():
     print("""
 Welcome to the Ceaser Cipher
 This program encrypts and decrypts text with the Ceaser Cipher. 
           """)
+
+def main():
+    """this is the main function of the program"""
+    welcome()
     enter_message()
     
 main()
