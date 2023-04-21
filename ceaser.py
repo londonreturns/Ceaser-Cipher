@@ -2,81 +2,119 @@
 this program encrypts and decrypts text using Ceaser Cipher
 """
 
-class NotSring(Exception):
+
+class NotRequiredString(Exception):
+    """NotRequiredString: is raised when a string contains characters other than alphabets"""
     pass
+
 
 class NotWholeNumber(Exception):
+    """NotWholeNumber: is raised when a string is nor a whole number"""
     pass
+
 
 class NotYesOrNo(Exception):
+    """NotYesOrNo: is raised when a string is not (y or n)"""
     pass
 
+
 def want_to_continue():
+    """This is want_to_continue function.
+    Prompts user to enter y or n.
+    Handles exception and continues / ends the program respectively.
+    """
     while True:
         try:
-            again = input("Do you want to continue (y)es or (n)o: ").lower()
-            if not (again == "y" or again == "n"):
+            # prompt user to input y or n
+            again = input('Do you want to continue (y)es or (n)o: ').lower()
+            if not (again == 'y' or again == 'n'):  # check if again is not (y or no)
                 raise NotYesOrNo
-        except NotYesOrNo:
-            print("Please enter only yes or no")
-        finally:
-            if again == "y":
-                return True
-            else:
-                return False
-                        
+            elif again == "y":
+                return True  # returns True if again is y
+            elif again == "n":
+                return False  # returns False if again is n
+        except NotYesOrNo:  # exception is raised if again is not y or n
+            print('Please enter only yes or no')
+
+
 def encrypt(text, shift_by):
-    print("encrypt", text, shift_by)
-    
+    """lorem ipsum
+    """
+    print('encrypt', text, shift_by)
+
+
 def decrypt(text, shift_by):
-    print("decrypt", text, shift_by)
+    """lorem ipsum
+    """
+    print('decrypt', text, shift_by)
+
 
 def enter_shift():
+    """This is the enter_shift function.
+    Prompts user to enter shift number for the cipher.
+    Handles exception and returns shift number.
+    """
     while True:
         try:
-            shift_num = int(input("Enter the shift number: "))
-            if shift_num < 0:
+            # prompt user to input shift number
+            shift_num = int(input('Enter the shift number: '))
+            if shift_num < 0:  # checks if shift_num is negative
                 raise NotWholeNumber
-        except NotWholeNumber:
-                print("Please enter a number greater than zero")
-                continue
-        except:
-            print("Invalid Shift number")
+        except NotWholeNumber:  # exception is raised if shift_number is negative
+            print('Please enter a number greater than zero')
             continue
-        finally:
-            return shift_num
-                        
-def enter_message():
-    while True:
-        try:
-            choice = input("Would you like to encrypt (e) or decrypt (d): ").lower()
-            if not (choice == "e" or choice == "d"):
-                raise NotSring
-            else:
-                shift = enter_shift()
-                if choice == "e":
-                    text_input = input("What message would you like to encrypt: ")
-                    encrypt(text_input, shift)
-                else:
-                    text_input = input("What message would you like to decrypt: ")
-                    decrypt(text_input, shift)
-        except NotSring:
-            print("Invalid Mode")
+        except:  # exception is raised for all other errors
+            print('Invalid Shift number')
             continue
-        if want_to_continue():
-            enter_message()
         else:
             break
+    return shift_num  # shift_number is returned
+
+
+def enter_message():
+    """This is the enter_message function.
+    Prompts user to input encrypt or decrypt."""
+    is_continue = True
+    while is_continue:
+        try:
+            # prompt user for choice
+            choice = input(
+                'Would you like to encrypt (e) or decrypt (d): ').lower()
+            if not (choice == 'e' or choice == 'd'):  # checks if choice is (e or d) or not
+                raise NotRequiredString
+            else:
+                shift = enter_shift()  # calls enter_shift function
+                if choice == "e":  # calls encrypt function if choice is e
+                    # prompts user for text input
+                    text_input = input(
+                        'What message would you like to encrypt: ')
+                    encrypt(text_input, shift)
+                else:  # calls decrypt function if choice is d
+                    # prompts user for text input
+                    text_input = input(
+                        'What message would you like to decrypt: ')
+                    decrypt(text_input, shift)
+        # exception is triggered if choice is not (y or n)
+        except NotRequiredString:
+            print('Invalid Mode')
+            continue
+        is_continue = want_to_continue()  # call want_to_function
+        if not is_continue:
+            break
+
 
 def welcome():
-    print("""
+    """This is the Welcome function to this program."""
+    print('''
 Welcome to the Ceaser Cipher
 This program encrypts and decrypts text with the Ceaser Cipher. 
-          """)
+          ''')
+
 
 def main():
-    """this is the main function of the program"""
-    welcome()
-    enter_message()
-    
-main()
+    """This is the main function of the program"""
+    welcome()  # calls welcome function
+    enter_message()  # calls enter message function
+
+
+main()  # calls main function
