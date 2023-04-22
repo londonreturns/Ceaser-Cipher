@@ -2,7 +2,6 @@
 this program encrypts and decrypts text using Ceaser Cipher
 """
 
-
 class NotRequiredString(Exception):
     """NotRequiredString: is raised when a string contains characters other than alphabets"""
     pass
@@ -38,9 +37,28 @@ def want_to_continue():
 
 
 def encrypt(text, shift_by):
-    """lorem ipsum
+    """this function encrypts text by shift forward.
+    For examples if shift is 2 and text is 'a', the encrypted text will be 'c'.
     """
-    print('encrypt', text, shift_by)
+    all_letters = 'abcdefghijklmnopqrstuvwxyz'
+    encrypt_code = {}
+    j = 1
+    if shift_by > 26:
+        shift_by %= 26
+    for i in range(len(all_letters)):
+        if i < len(all_letters) - shift_by:
+            encrypt_code[all_letters[i]] = all_letters [i + shift_by]
+        else:
+            encrypt_code[all_letters[i]] = all_letters[j]
+            j += 1
+    temp = ''
+    
+    for character in text:
+        if character in encrypt_code:
+            temp += encrypt_code[character]
+        else:
+            teno += character
+    print(temp)            
 
 
 def decrypt(text, shift_by):
@@ -87,12 +105,12 @@ def enter_message():
                 if choice == "e":  # calls encrypt function if choice is e
                     # prompts user for text input
                     text_input = input(
-                        'What message would you like to encrypt: ')
+                        'What message would you like to encrypt: ').lower()
                     encrypt(text_input, shift)
                 else:  # calls decrypt function if choice is d
                     # prompts user for text input
                     text_input = input(
-                        'What message would you like to decrypt: ')
+                        'What message would you like to decrypt: ').lower()
                     decrypt(text_input, shift)
         # exception is triggered if choice is not (y or n)
         except NotRequiredString:
