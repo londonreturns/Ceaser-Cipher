@@ -5,17 +5,14 @@ this program encrypts and decrypts text using Ceaser Cipher
 
 class NotRequiredString(Exception):
     """NotRequiredString: is raised when a string contains characters other than alphabets"""
-    pass
 
 
 class NotWholeNumber(Exception):
     """NotWholeNumber: is raised when a string is nor a whole number"""
-    pass
 
 
 class NotYesOrNo(Exception):
     """NotYesOrNo: is raised when a string is not (y or n)"""
-    pass
 
 
 def want_to_continue():
@@ -37,34 +34,61 @@ def want_to_continue():
             print('Please enter only yes or no')
 
 
+def encrypt_decrypt_key_generator(encrypt_or_decrypt, shift_number):
+    all_letters = 'abcdefghijklmnopqrstuvwxyz'
+    key_dictionary = {}
+    j = 0
+    if shift_number > 26:
+        shift_number %= 26
+    if encrypt_or_decrypt == 'e':
+        for i in range(len(all_letters)):
+            if shift_number + i < 26:
+                key_dictionary[all_letters[i]] = all_letters[i + shift_number]
+            else:
+                key_dictionary[all_letters[i]] = all_letters[j]
+                j += 1
+    else:
+        for i in range(len(all_letters)):
+            if shift_number + i < 26:
+                key_dictionary[all_letters[i + shift_number]] = all_letters[i]
+            else:
+                key_dictionary[all_letters[j]] = all_letters[i]
+                j += 1
+    return key_dictionary
+
+
 def encrypt(text, shift_by):
-    """this function encrypts text by shift forward.
+    """This function encrypts text by shift number.
     For examples if shift is 2 and text is 'a', the encrypted text will be 'c'.
     """
-    all_letters = 'abcdefghijklmnopqrstuvwxyz'
-    encryption_key = {} # initialising encryption key
-    j = 1
-    if shift_by > 26:
-        shift_by %= 26
-    for i in range(len(all_letters)):
-        if i < len(all_letters) - shift_by:
-            encryption_key[all_letters[i]] = all_letters[i + shift_by]
-        else:
-            encryption_key[all_letters[i]] = all_letters[j]
-            j += 1
+    encryption_key = encrypt_decrypt_key_generator(
+        'e', shift_by)  # calling encrypt_decrypt_key_generator function
+    print(encryption_key)
     temp = ''
 
     for character in text:
         if character in encryption_key:
             temp += encryption_key[character]
         else:
-            teno += character
+            temp += character
     print(temp)
 
+
 def decrypt(text, shift_by):
-    """lorem ipsum
+    """This function decrypts text by shift number.
+    For examples if shift is 2 and text is 'c', the encrypted text will be 'a'.
     """
-    print('decrypt', text, shift_by)
+    decryption_key = encrypt_decrypt_key_generator(
+        'd', shift_by)  # calling encrypt_decrypt_key_generator function
+    print(decryption_key)
+    temp = ''
+
+    for character in text:
+        if character in decryption_key:
+            temp += decryption_key[character]
+        else:
+            temp += character
+    print(temp)
 
 
 def enter_shift():
@@ -91,7 +115,8 @@ def enter_shift():
 
 def enter_message():
     """This is the enter_message function.
-    Prompts user to input encrypt or decrypt."""
+    Prompts user to input encrypt or decrypt.
+    Prompts user to enter message."""
     is_continue = True
     while is_continue:
         try:
