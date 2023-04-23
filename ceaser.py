@@ -2,6 +2,7 @@
 this program encrypts and decrypts text using Ceaser Cipher
 """
 
+
 class NotRequiredString(Exception):
     """NotRequiredString: is raised when a string contains characters other than alphabets"""
     pass
@@ -41,25 +42,24 @@ def encrypt(text, shift_by):
     For examples if shift is 2 and text is 'a', the encrypted text will be 'c'.
     """
     all_letters = 'abcdefghijklmnopqrstuvwxyz'
-    encrypt_code = {}
+    encryption_key = {} # initialising encryption key
     j = 1
     if shift_by > 26:
         shift_by %= 26
     for i in range(len(all_letters)):
         if i < len(all_letters) - shift_by:
-            encrypt_code[all_letters[i]] = all_letters [i + shift_by]
+            encryption_key[all_letters[i]] = all_letters[i + shift_by]
         else:
-            encrypt_code[all_letters[i]] = all_letters[j]
+            encryption_key[all_letters[i]] = all_letters[j]
             j += 1
     temp = ''
-    
+
     for character in text:
-        if character in encrypt_code:
-            temp += encrypt_code[character]
+        if character in encryption_key:
+            temp += encryption_key[character]
         else:
             teno += character
-    print(temp)            
-
+    print(temp)
 
 def decrypt(text, shift_by):
     """lorem ipsum
@@ -81,7 +81,7 @@ def enter_shift():
         except NotWholeNumber:  # exception is raised if shift_number is negative
             print('Please enter a number greater than zero')
             continue
-        except:  # exception is raised for all other errors
+        except ValueError:  # exception is raised for value error
             print('Invalid Shift number')
             continue
         else:
