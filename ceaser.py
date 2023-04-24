@@ -1,7 +1,15 @@
 """
-this program encrypts and decrypts text using Ceaser Cipher
+This program encrypts and decrypts text using Ceaser Cipher.
+
+Colorama module has been used to color text in console.
+Welcome message is given in Green.
+Input prompts are given in Cyan.
+Input are in White.
+Ouput are given in Yellow.
 """
 
+from colorama import Fore
+from colorama import init as colorama_init
 
 class NotRequiredString(Exception):
     """NotRequiredString: is raised when a string contains characters other than alphabets"""
@@ -13,8 +21,7 @@ class NotWholeNumber(Exception):
 
 class NotYesOrNo(Exception):
     """NotYesOrNo: is raised when a string is not (y or n)"""
-
-
+      
 def want_to_continue():
     """This is want_to_continue function.
     Prompts user to enter y or n.
@@ -99,7 +106,8 @@ def enter_shift():
     while True:
         try:
             # prompt user to input shift number
-            shift_num = int(input('Enter the shift number: '))
+            shift_num = int(input(
+                f'{Fore.CYAN}Enter the shift number: {Fore.RESET}'))
             if shift_num < 0:  # checks if shift_num is negative
                 raise NotWholeNumber
         except NotWholeNumber:  # exception is raised if shift_number is negative
@@ -122,7 +130,7 @@ def enter_message():
         try:
             # prompt user for choice
             choice = input(
-                'Would you like to encrypt (e) or decrypt (d): ').lower()
+                f'{Fore.CYAN}Would you like to encrypt (e) or decrypt (d): {Fore.RESET}').lower()
             if not (choice == 'e' or choice == 'd'):  # checks if choice is (e or d) or not
                 raise NotRequiredString
             else:
@@ -130,16 +138,16 @@ def enter_message():
                 if choice == "e":  # calls encrypt function if choice is e
                     # prompts user for text input
                     text_input = input(
-                        'What message would you like to encrypt: ').lower()
+                        f'{Fore.CYAN}What message would you like to encrypt: {Fore.RESET}').lower()
                     encrypt(text_input, shift)
                 else:  # calls decrypt function if choice is d
                     # prompts user for text input
                     text_input = input(
-                        'What message would you like to decrypt: ').lower()
+                        f'{Fore.CYAN}What message would you like to decrypt: {Fore.RESET}').lower()
                     decrypt(text_input, shift)
         # exception is triggered if choice is not (y or n)
         except NotRequiredString:
-            print('Invalid Mode')
+            print(f'{Fore.RED}Invalid Mode{Fore.RESET}')
             continue
         is_continue = want_to_continue()  # call want_to_function
         if not is_continue:
@@ -148,7 +156,7 @@ def enter_message():
 
 def welcome():
     """This is the Welcome function to this program."""
-    print('''
+    print(f'''{Fore.GREEN}
 Welcome to the Ceaser Cipher
 This program encrypts and decrypts text with the Ceaser Cipher. 
           ''')
@@ -156,6 +164,7 @@ This program encrypts and decrypts text with the Ceaser Cipher.
 
 def main():
     """This is the main function of the program"""
+    colorama_init(autoreset=True)
     welcome()  # calls welcome function
     enter_message()  # calls enter message function
 
