@@ -177,17 +177,20 @@ def process_file(file_name, mode, shift_number):
     It takes in file_name, mode, shift_number and makes list of encrypted string.
     Returns list of encrypted / decrypted characters.
     """
-    with open(file_name, 'r', encoding = 'utf-8') as file1: # opening file to read with utf-8 encoding
+    # opening file to read with utf-8 encoding
+    with open(file_name, 'r', encoding = 'utf-8') as file1:
         temp_list = []
         if mode == 'e': # if choice is encryption
             for line in file1: # file traversal
                 for character in line: # string traversal
-                    temp_character = encrypt(character.upper(), shift_number) # call encrypt function
+                    # call encrypt function
+                    temp_character = encrypt(character.upper(), shift_number)
                     temp_list.append(temp_character)
         else: # if choice is decryption
             for line in file1: # file traversal
                 for character in line: # string traversal
-                    temp_character = decrypt(character.upper(), shift_number) # call decrypt function
+                     # call decrypt function
+                    temp_character = decrypt(character.upper(), shift_number)
                     temp_list.append(temp_character)
         return temp_list
 
