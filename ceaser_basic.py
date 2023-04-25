@@ -1,88 +1,38 @@
 """
 This program encrypts and decrypts text using Ceaser Cipher.
-First input is only in console
-only after second time files can be also be read and write from file.
-Welcome and goodbye message is given in Green.
-Input prompts are given in Cyan.
-Input are in White.
-Ouput are given in Yellow.
-Colorama module has been used to color text in console. 
-Colorama must be installed for this program to run.
-Install colorama in windows by
-pip install colorama
+First input and output is only in console.
+Only after second time files can be also be read and write from file.
 """
 
 from os import startfile
 from os.path import exists
-from colorama import Fore
-from colorama import init as colorama_init
 
 class NotWholeNumber(Exception):
     """NotWholeNumber: is raised when a string is nor a whole number"""
 
-
 class NotYesOrNo(Exception):
     """NotYesOrNo: is raised when a string is not (y or n)"""
-
-def want_to_continue():
-    """
-    This is want_to_continue function.
-    Prompts user to enter y or n.
-    Handles exception and continues / ends the program respectively.
-    """
-    while True:
-        try:
-            # prompt user to input y or n
-            again = input(
-                f'\n{Fore.CYAN}Do you want to continue (y)es or (n)o: {Fore.RESET}').lower()
-            if not (again == 'y' or again == 'n'):  # check if again is not (y or no)
-                raise NotYesOrNo
-            elif again == "y":
-                return True  # returns True if again is y
-            elif again == "n":
-                return False  # returns False if again is n
-        except NotYesOrNo:  # exception is raised if again is not y or n
-            print(f'{Fore.RED}Please enter only yes or no{Fore.RESET}')
-
-
-def encrypt_decrypt_key_generator(encrypt_or_decrypt, shift_number):
-    """
-    This function generates the key to encrypt an decrypt.
-    Returns keys in dictionary.
-    """
-    all_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    key_value_pair = {}
-    j = 0
-    if shift_number > 26: # if shift is greater than 26, new shift number is shift mod 26
-        shift_number %= 26
-    if encrypt_or_decrypt == 'e': # for encryption
-        for i, letter in enumerate(all_letters):
-            if shift_number + i < 26: # if within range
-                key_value_pair[letter] = all_letters[i + shift_number]
-            else: # if out of range
-                key_value_pair[letter] = all_letters[j]
-                j += 1
-    else: # for decryption
-        for i, letter in enumerate(all_letters):
-            if shift_number + i < 26:
-                key_value_pair[all_letters[i + shift_number]] = letter
-            else:
-                key_value_pair[all_letters[j]] = letter
-                j += 1
-    return key_value_pair
-
 
 def encrypt(text, shift_by):
     """
     This function encrypts text by shift number.
     For examples if shift is 2 and text is 'a', the encrypted text will be 'c'.
     """
-    # call encrypt_decrypt_key_generator function
-    encryption_key = encrypt_decrypt_key_generator('e', shift_by)
+    all_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    key_value_pair = {}
+    j = 0
+    if shift_by > 26: # if shift is greater than 26, new shift number is shift mod 26
+        shift_by %= 26
+    for i, letter in enumerate(all_letters):
+        if shift_by + i < 26: # if within range
+            key_value_pair[letter] = all_letters[i + shift_by]
+        else: # if out of range
+            key_value_pair[letter] = all_letters[j]
+            j += 1
     temp = ''
     for character in text: # string traversal
-        if character in encryption_key: # checking if character is in encryption_key
-            temp += encryption_key[character]
+        if character in key_value_pair: # checking if character is in key_value_pair
+            temp += key_value_pair[character]
         else: # if not then add character unchanged
             temp += character
     return temp
@@ -93,12 +43,21 @@ def decrypt(text, shift_by):
     This function decrypts text by shift number.
     For examples if shift is 2 and text is 'c', the encrypted text will be 'a'.
     """
-    decryption_key = encrypt_decrypt_key_generator(
-        'd', shift_by)  # call encrypt_decrypt_key_generator function
+    all_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    key_value_pair = {}
+    j = 0
+    if shift_by > 26: # if shift is greater than 26, new shift number is shift mod 26
+        shift_by %= 26
+    for i, letter in enumerate(all_letters):
+        if shift_by + i < 26:
+            key_value_pair[all_letters[i + shift_by]] = letter
+        else:
+            key_value_pair[all_letters[j]] = letter
+            j += 1
     temp = ''
     for character in text: # string traversal
-        if character in decryption_key: # checking if character is in decryption_key
-            temp += decryption_key[character]
+        if character in key_value_pair: # checking if character is in key_value_pair
+            temp += key_value_pair[character]
         else: # if not then add character unchanged
             temp += character
     return temp
@@ -118,16 +77,16 @@ def enter_message():
     """
     while True:
         choice_ed = input(
-            f'{Fore.CYAN}\nWould you like to encrypt (e) or decrypt (d): {Fore.RESET}').lower()
+            '\nWould you like to encrypt (e) or decrypt (d): ').lower()
         if not(choice_ed == 'e' or choice_ed == 'd'): # if choice is not encryption or decrption
-            print(f'{Fore.RED}Invalid Mode{Fore.RESET}')
+            print('Invalid Mode')
         else:
             if choice_ed == 'e': # if choice is encryption
                 text_input = input(
-                    f'{Fore.CYAN}\nWhat message would you like to encrypt: {Fore.RESET}').upper()
+                    '\nWhat message would you like to encrypt: ').upper()
             else: # if choice is decryption
                 text_input = input(
-                    f'{Fore.CYAN}\nWhat message would you like to decrypt: {Fore.RESET}').upper()
+                    '\nWhat message would you like to decrypt: ').upper()
             return choice_ed, text_input
 
 
@@ -141,33 +100,30 @@ def message_or_file():
     """
     while True:
         choice_ed = input(
-            f'{Fore.CYAN}\nWould you like to encrypt (e) or decrypt (d): {Fore.RESET}').lower()
+            '\nWould you like to encrypt (e) or decrypt (d): ').lower()
         if not (choice_ed =='e' or choice_ed =='d'):
-            print(f'{Fore.RED}Invalid Mode{Fore.RESET}')
+            print('Invalid Mode')
             continue
         else:
             while True:
                 choice_cf = input(
-                    f'{Fore.CYAN}\nWould you like enter in console (c) or file (f): {Fore.RESET}'
+                    '\nWould you like enter in console (c) or file (f): '
                     ).lower()
                 if not (choice_cf =='c' or choice_cf == 'f'): # if encrption and file
-                    print(f'{Fore.RED}Invalid Mode{Fore.RESET}')
+                    print('Invalid Mode')
                     continue
                 else:
                     if choice_cf == 'c' and choice_ed == 'e': # if encrption and console
                         text_input = input(
-                            f'{Fore.CYAN}\nWhat message would you like to encrypt: {Fore.RESET}'
-                            ).upper()
+                            '\nWhat message would you like to encrypt: ').upper()
                         file_name = None
                     elif choice_cf == 'c' and choice_ed == 'd':  # if decryption and console
                         text_input = input(
-                            f'{Fore.CYAN}\nWhat message would you like to encrypt: {Fore.RESET}'
-                            ).upper()
+                            '\nWhat message would you like to encrypt: ').upper()
                         file_name = None
                     else: # if decryption and console
                         file_name = input(
-                            f'{Fore.CYAN}\nWhat message would you like to decrypt: {Fore.RESET}'
-                            ).upper()
+                            '\nWhat message would you like to decrypt: ').upper()
                         text_input = None
                 return choice_ed, text_input, file_name
 
@@ -202,13 +158,14 @@ def write_messages(all_characters):
     It takes a list and writes in an external file and opens the file in notepad.
     """
     while True:
-        write_file = input(f'{Fore.CYAN}\nOutput written to: {Fore.RESET}')
+        write_file = input('\nOutput written to: ')
         # opening file to read with utf-8 encoding
         with open(write_file, 'w', encoding = 'utf-8') as file2:
             for character in all_characters: # list traversal
                 file2.write(character)
-            print(Fore.YELLOW + '\nFile saved successfully' + Fore.RESET)
-            break
+            print('\nFile saved successfully')
+        startfile(write_file) # to open file in notepad after writing
+        break
 
 
 def enter_shift():
@@ -221,14 +178,14 @@ def enter_shift():
         try:
             # prompt user to input shift number
             shift_num = int(input(
-                f'{Fore.CYAN}\nEnter the shift number: {Fore.RESET}'))
+                '\nEnter the shift number: '))
             if shift_num < 0:  # checks if shift_num is negative
                 raise NotWholeNumber
         except NotWholeNumber:  # exception is raised if shift_number is negative
-            print(f'{Fore.RED}Please enter a number greater than zero{Fore.RESET}')
+            print('Please enter a number greater than zero')
             continue
         except ValueError:  # exception is raised for value error
-            print(f'{Fore.RED}Invalid Shift number{Fore.RESET}')
+            print('Invalid Shift number')
             continue
         else:
             break
@@ -237,7 +194,7 @@ def enter_shift():
 
 def welcome():
     """This is the Welcome function to this program."""
-    print(f'''{Fore.GREEN}
+    print('''
 Welcome to the Ceaser Cipher
 This program encrypts and decrypts text with the Ceaser Cipher.''')
 
@@ -248,7 +205,6 @@ def main():
     still_continue = True
     run_file = False
     while still_continue:
-        colorama_init(autoreset=True)
         if run_file:
             choice, message, file1 = message_or_file() # call message_or_file function
         else:
@@ -257,24 +213,35 @@ def main():
         shift_number = enter_shift() # call enter_shift function
         if file1 is None:
             if choice == 'e':
-                print(Fore.YELLOW + encrypt(message, shift_number) + Fore.RESET)
+                print(encrypt(message, shift_number))
             else:
-                print(Fore.YELLOW + decrypt(message, shift_number) + Fore.RESET)
+                print(decrypt(message, shift_number))
         else:
             while not is_file(file1):
-                print(f'{Fore.RED}File not found{Fore.RESET}')
+                print('File not found')
                 file1 = input(
-                    f'{Fore.CYAN}\nWhat is the name of the file: {Fore.RESET}').upper()
+                    '\nWhat is the name of the file: ').upper()
             # call process_file function
             changed_text_list = process_file(file1, choice, shift_number)
             write_messages(changed_text_list) # call write_messages function
-            startfile(file1) # to open file in notepad after writing
         if still_continue:
             run_file = True
-            still_continue = want_to_continue() # call want_to_continue function
-            continue
-    print(f'''{Fore.GREEN}
-Thank you for using my program{Fore.RESET}''')
+            while True:
+                try:
+                    # prompt user to input y or n
+                    again = input('Do you want to continue (y)es or (n)o: ').lower()
+                    if not (again == 'y' or again == 'n'):  # check if again is not (y or no)
+                        raise NotYesOrNo
+                    elif again == "y":
+                        still_continue = True  # returns True if again is y
+                        break
+                    elif again == "n":
+                        still_continue = False  # returns False if again is n
+                        break
+                except NotYesOrNo:  # exception is raised if again is not y or n
+                    print('Please enter only yes or no')
+                    continue
+    print('''Thank you for using my program''')
 
 
 main()  # call main function
